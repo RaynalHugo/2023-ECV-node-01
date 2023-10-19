@@ -1,5 +1,5 @@
 import express from "express";
-import {readFile} from "fs/promises"
+import {readFile,writeFile} from "fs/promises"
 const app = express();
 const port = 3000;
 app.use(express.json());
@@ -33,6 +33,16 @@ app.get("/htmlpropre", async (req, res) => {
 
   const html = await readFile("./src/index.html");
      res.send(html.toString());
+});
+
+
+app.get("/compteur", async (req, res) => {
+     let compteur = await readFile("./src/compteur.txt").then((data) => {
+          return parseInt(data.toString());
+     });
+     compteur++;
+     await writeFile("./src/compteur.txt", compteur.toString());
+     res.send(`Compteur : ${compteur}`);  
 });
 
 app.listen(port, () => {
