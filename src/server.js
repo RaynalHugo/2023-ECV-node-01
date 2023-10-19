@@ -3,9 +3,10 @@ import { readFile, writeFile, appendFile } from "fs/promises"
 const app = express();
 const port = 3000;
 app.use(express.json());
+app.set("trust proxy", true)
 
 function logMiddleware(req, res, next) {
-     appendFile('./log.txt', `\n ${ new Date().toISOString() } : ${ req.url }`);
+     appendFile('./log.txt', `\n ${ new Date().toISOString() } : ${ req.url } ${ req.ip }`);
      next();
 }
 app.use(logMiddleware);
