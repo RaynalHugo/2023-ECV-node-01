@@ -1,8 +1,14 @@
 import express from "express";
-import { readFile, writeFile } from "fs/promises"
+import { readFile, writeFile, appendFile } from "fs/promises"
 const app = express();
 const port = 3000;
 app.use(express.json());
+
+function logMiddleware(req, res, next) {
+     appendFile('./log.txt', `\n ${ new Date().toISOString() } : ${ req.url }`);
+     next();
+}
+app.use(logMiddleware);
 
 app.get("/", (req, res) => {
     res.send("Hello World");
