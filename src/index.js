@@ -9,16 +9,11 @@ const file = readFileSync('./package.json');
 console.log(JSON.parse(file.toString()).version, ' : Sync');
 
 const filepromise = readFile('./package.json')
+console.log("_______________");
+const data = await filepromise
 
-filepromise.then(data => {
-    const version = JSON.parse(data.toString()).version;
-    console.log(version);
-    return version;
-}).then(version =>{
-   return writeFile('./version', version)
-}).then(() => {
-    console.log("Version entrée dans le fichier")
-})
+const version = JSON.parse(data.toString()).version;
+console.log(version);
 console.log(filepromise);
 
 console.log('Fin du programme');
