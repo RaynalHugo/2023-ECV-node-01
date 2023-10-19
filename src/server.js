@@ -10,6 +10,23 @@ function logMiddleware(req, res, next) {
      next();
 }
 app.use(logMiddleware);
+const requestsByIp = {}
+function spamMiddleware(req, res, next) {
+
+    if(!req.ip in requestsByIp) {
+         next()
+    } else {
+       if((Date.now() - requestsByIp[req.ip]) < 2000 ) {
+         res.status(429).send('too many requests')
+         
+       } else {
+        next()
+       }
+    }
+    requestsByIp[req.ip] = Date.now()
+    console.log(requestsByIp)
+}
+app.use(spamMiddleware);
 
 app.get("/", (req, res) => {
     res.send("Hello World");
