@@ -1,5 +1,6 @@
 import { sayHello } from './sayHello.js';
-import { readFileSync, readFile, writeFile } from 'fs';
+import { readFileSync} from 'fs';
+import {readFile, writeFile } from 'fs/promises';
 
 sayHello('Lolita');
 
@@ -7,21 +8,17 @@ const file = readFileSync('./package.json');
 
 console.log(JSON.parse(file.toString()).version, ' : Sync');
 
-readFile('./package.json', (err, data) => {
-    if (err) {
-        console.log(err);
-    } else {
-        const version = JSON.parse(data.toString()).version;
-        console.log(version, ' : Async');
+const filepromise = readFile('./package.json')
 
-        writeFile('./version', version, (err, data) => {
-            if (err) {
-                console.log(err)
-            } else {
-                console.log('File written');
-            }
-        });
-    }
-});
+filepromise.then(data => {
+    const version = JSON.parse(data.toString()).version;
+    console.log(version);
+    return version;
+}).then(version =>{
+   return writeFile('./version', version)
+}).then(() => {
+    console.log("Version entrée dans le fichier")
+})
+console.log(filepromise);
 
 console.log('Fin du programme');
